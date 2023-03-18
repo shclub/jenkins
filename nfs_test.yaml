@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nfs-test
+  name: nfs-test
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: nfs-test
+  template:
+    metadata:
+      labels:
+        app: nfs-test
+    spec:
+      containers:
+      - name: nfs-test
+        command:
+          - sh
+          - -c
+          - sleep 360000
+        image: busybox:1.28
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: /mnt
+          name: data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: jenkins-edu-pvc
